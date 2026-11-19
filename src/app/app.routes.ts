@@ -49,6 +49,9 @@ export const routes: Routes = [
     resolve: { listing: listingResolver },
     loadComponent: () => import('./pages/details/details').then((m) => m.Details),
   },
-  // Wildcard fallback: redirects unknown routes to the home page
-  { path: '**', redirectTo: '' },
+  // Wildcard fallback: displays dedicated 404 Not Found page for unmatched routes
+  {
+    path: '**',
+    loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound),
+  },
 ];
