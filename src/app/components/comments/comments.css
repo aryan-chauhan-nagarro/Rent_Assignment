@@ -1,0 +1,14 @@
+.comments { margin-top: 2rem; background: var(--surface); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+.comment { border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; margin: 0.75rem 0; }
+.reply { margin-left: 1.5rem; background: var(--bg); border-left: 3px solid var(--primary); }
+.meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.9rem; }
+.date { color: var(--muted); font-size: 0.8rem; }
+.badge { background: var(--primary); color: #fff; font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 999px; }
+.comment p { margin: 0.4rem 0; white-space: pre-wrap; }
+.comment-actions { display: flex; gap: 0.75rem; align-items: center; }
+.link { background: transparent; color: var(--primary); padding: 0.2rem 0; }
+.link:hover:not(:disabled) { background: transparent; text-decoration: underline; }
+.danger { color: var(--danger); }
+.reply-box { margin-top: 0.5rem; }
+.submit { margin-top: 0.75rem; }
+.muted, .login-note { color: var(--muted); margin: 1rem 0; }

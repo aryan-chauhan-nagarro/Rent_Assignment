@@ -1,0 +1,77 @@
+@if (listing(); as l) {
+  <a routerLink="/" class="back">← Back to listings</a>
+
+  <div class="layout">
+    <section class="gallery">
+      <img class="main" [src]="mainPhoto()" [alt]="l.title" />
+      @if (l.photos.length > 1) {
+        <div class="thumbs">
+          @for (p of l.photos; track $index) {
+            <img [src]="p" [alt]="l.title" [class.selected]="$index === selectedPhoto()"
+                 (click)="selectedPhoto.set($index)" />
+          }
+        </div>
+      }
+    </section>
+
+    <section class="info">
+      <h1>{{ l.title }}</h1>
+      <p class="muted">{{ l.address }}</p>
+      <p class="rent">
+        {{ l.rent | currency: 'INR'}} / month
+        @if (l.negotiable) { <span class="tag">Negotiable</span> }
+      </p>
+
+      <ul class="facts">
+        <li><strong>Area:</strong> {{ l.squareFeet }} sq ft</li>
+        <li><strong>Lease:</strong> {{ l.leaseType }}</li>
+        <li><strong>Furnished:</strong> {{ l.furnished ? 'Yes' : 'No' }}</li>
+        <li><strong>Food Preference:</strong> {{ l.vegetarianPreference === 'veg' ? 'Veg Only' : (l.vegetarianPreference === 'non-veg' ? 'Non-Veg Allowed' : 'Any / No Preference') }}</li>
+        <li><strong>Shared:</strong> {{ l.shared ? 'Yes' : 'No' }}</li>
+        <li><strong>Posted:</strong> {{ l.createdAt | date: 'mediumDate' }} by {{ l.ownerName }}</li>
+      </ul>
+
+      @if (isOwner()) {
+        <div class="owner-controls">
+          <span class="owner-tag">★ You own this listing</span>
+          <div class="owner-actions">
+            <a [routerLink]="['/edit', l.id]" class="btn btn-edit">✎ Edit Listing</a>
+            <button type="button" class="btn btn-delete" (click)="deleteListing()">🗑 Delete Listing</button>
+          </div>
+        </div>
+      }
+
+      <h3>Description</h3>
+      <p>{{ l.description }}</p>
+
+      <h3>Amenities</h3>
+      <div class="chips">
+        @for (a of l.amenities; track a) {
+          <span class="chip">{{ a }}</span>
+        } @empty {
+          <span class="muted">None listed</span>
+        }
+      </div>
+
+      @if (l.contactPhone) {
+        <h3>Contact</h3>
+        <p>{{ l.contactPhone }}</p>
+      }
+
+      <button type="button" class="fav" [class.active]="isFavourite()" (click)="toggleFavourite()">
+        {{ isFavourite() ? '♥ Favourited' : '♡ Mark as Favourite' }}
+      </button>
+
+      @if (canInquire()) {
+  <h3>Send an inquiry</h3>
+    <textarea rows="3" [formControl]="inquiryControl" placeholder="Hi, is this still available?"></textarea>
+    @if (inquiryControl.touched && inquiryControl.invalid) {
+        <small class="error">Message can't be empty (max 300 characters)</small>
+    }
+    <button type="button" class="send" (click)="sendInquiry()">Send Inquiry</button>
+    }
+    </section>
+  </div>
+
+  <app-comments [listingId]="l.id" [ownerId]="l.ownerId" />
+}

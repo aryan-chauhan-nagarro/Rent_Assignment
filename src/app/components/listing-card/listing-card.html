@@ -1,0 +1,26 @@
+<article class="card">
+  <div class="image-container">
+    <img [src]="listing().photos[0]" [alt]="listing().title" />
+    @if (listing().vegetarianPreference === 'veg') {
+      <span class="badge-tag veg">🌿 Veg Only</span>
+    } @else if (listing().vegetarianPreference === 'non-veg') {
+      <span class="badge-tag non-veg">🍖 Non-Veg</span>
+    }
+  </div>
+  <div class="card-body">
+    <h3>{{ listing().title }}</h3>
+    <p class="address">{{ listing().address }}</p>
+    <p class="rent">{{ listing().rent | currency:'INR' }} / month</p>
+    <p class="desc">{{ listing().description }}</p>
+    <div class="actions">
+      <a [routerLink]="['/listing', listing().id]">View Details</a>
+        <button
+            type="button"
+            [class.active]="isFavourite()"
+            (click)="favouriteToggled.emit(listing().id)"
+            >
+            {{ isFavourite() ? '♥ Favourited' : '♡ Mark as Favourite' }}
+        </button>
+    </div>
+  </div>
+</article>

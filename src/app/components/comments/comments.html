@@ -1,0 +1,64 @@
+<section class="comments">
+  <h2>Comments ({{ forListing().length }})</h2>
+
+  @for (c of topLevel(); track c.id) {
+    <article class="comment">
+      <div class="meta">
+        <strong>{{ c.userName }}</strong>
+        @if (c.userId === ownerId()) { <span class="badge">Owner</span> }
+        <span class="date">{{ c.createdAt | date: 'medium' }}</span>
+      </div>
+      <p>{{ c.text }}</p>
+
+      <div class="comment-actions">
+        @if (auth.isLoggedIn()) {
+          <button type="button" class="link" (click)="startReply(c.id)">Reply</button>
+        }
+        @if (auth.currentUser()?.id === c.userId) {
+          <button type="button" class="link danger" (click)="remove(c.id)">Delete</button>
+        }
+      </div>
+
+      @for (r of replies()[c.id] ?? []; track r.id) {
+        <article class="comment reply">
+          <div class="meta">
+            <strong>{{ r.userName }}</strong>
+            @if (r.userId === ownerId()) { <span class="badge">Owner</span> }
+            <span class="date">{{ r.createdAt | date: 'medium' }}</span>
+          </div>
+          <p>{{ r.text }}</p>
+          @if (auth.currentUser()?.id === r.userId) {
+            <button type="button" class="link danger" (click)="remove(r.id)">Delete</button>
+          }
+        </article>
+      }
+
+      @if (replyingTo() === c.id) {
+        <div class="reply-box">
+          <textarea rows="2" [formControl]="replyControl" placeholder="Write a reply..."></textarea>
+          @if (replyControl.touched && replyControl.invalid) {
+            <small class="error">Reply can't be empty (max 500 characters)</small>
+          }
+          <div class="comment-actions">
+            <button type="button" (click)="postReply(c.id)">Post reply</button>
+            <button type="button" class="link" (click)="cancelReply()">Cancel</button>
+          </div>
+        </div>
+      }
+    </article>
+  } @empty {
+    <p class="muted">No comments yet. Be the first to ask a question.</p>
+  }
+
+  @if (auth.isLoggedIn()) {
+    <label for="new-comment">Leave a Comment</label>
+    <textarea id="new-comment" rows="3" [formControl]="commentControl"
+              placeholder="Ask a question or share details..."></textarea>
+    @if (commentControl.touched && commentControl.invalid) {
+      <small class="error">Comment can't be empty (max 500 characters)</small>
+    }
+    <button type="button" class="submit" (click)="postComment()">Submit</button>
+  } @else {
+    <p class="login-note"><a routerLink="/login">Log in</a> to comment or reply.</p>
+  }
+</section>

@@ -1,0 +1,128 @@
+@if (draft(); as d) {
+  <app-post-preview [listing]="d" (edit)="backToEdit()" (confirmed)="confirm()" />
+} @else {
+  <div class="form-card">
+    <h1>{{ isEditMode() ? 'Edit Listing' : 'Create New Post' }}</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onPreview()">
+
+        <h2>Description</h2>
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" placeholder="Enter your ad title" />
+        @if (hasError('title', 'required') || hasError('title', 'notBlank')) {
+        <small class="error">Title is required</small>
+        }
+        @if (hasError('title', 'minlength')) {
+        <small class="error">Title must be at least 5 characters</small>
+        }
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="5" formControlName="description"
+                placeholder="Enter a detailed description within 1400 characters"></textarea>
+        <small class="counter" [class.over]="form.controls.description.value.length > maxDescription">
+        {{ form.controls.description.value.length }} / {{ maxDescription }}
+        </small>
+        @if (hasError('description', 'required') || hasError('description', 'notBlank')) {
+        <small class="error">Description is required</small>
+        }
+        @if (hasError('description', 'minlength')) {
+        <small class="error">Write at least 20 characters</small>
+        }
+        @if (hasError('description', 'maxlength')) {
+        <small class="error">Maximum 1400 characters</small>
+        }
+
+        <h2>Property Location</h2>
+        <label for="address">Street Address</label>
+        <input id="address" type="text" formControlName="address" placeholder="Enter street address" />
+        @if (hasError('address', 'required') || hasError('address', 'notBlank')) {
+        <small class="error">Address is required</small>
+        }
+
+        <h2>Property Details</h2>
+        <div class="two-col">
+        <div>
+            <label for="sqft">Square Feet</label>
+            <input id="sqft" type="number" formControlName="squareFeet" placeholder="Enter area in square feet" />
+            @if (hasError('squareFeet', 'required')) {
+            <small class="error">Area is required</small>
+            }
+            @if (hasError('squareFeet', 'min')) {
+            <small class="error">Minimum 50 sq ft</small>
+            }
+        </div>
+        <div>
+            <span class="group-label">Stay / Lease type</span>
+            <label class="check"><input type="radio" formControlName="leaseType" value="long" /> Long term (6+ months)</label>
+            <label class="check"><input type="radio" formControlName="leaseType" value="short" /> Short term</label>
+            <label class="check"><input type="radio" formControlName="leaseType" value="both" /> Both</label>
+        </div>
+        </div>
+
+        <h2>Is this a shared property?</h2>
+        <label class="check"><input type="radio" formControlName="shared" [value]="true" /> Yes</label>
+        <label class="check"><input type="radio" formControlName="shared" [value]="false" /> No</label>
+
+        <h2>Expected Rent</h2>
+        <div class="two-col">
+        <div>
+            <label for="rent">Rent per month ($)</label>
+            <input id="rent" type="number" formControlName="rent" placeholder="Enter expected rent" />
+            @if (hasError('rent', 'required')) {
+            <small class="error">Rent is required</small>
+            }
+            @if (hasError('rent', 'min')) {
+            <small class="error">Rent must be greater than 0</small>
+            }
+        </div>
+        <div>
+            <label class="check"><input type="checkbox" formControlName="negotiable" /> Negotiable</label>
+        </div>
+        </div>
+
+        <h2>Is the room/apartment furnished?</h2>
+        <label class="check"><input type="radio" formControlName="furnished" [value]="true" /> Yes</label>
+        <label class="check"><input type="radio" formControlName="furnished" [value]="false" /> No</label>
+
+        <h2>Vegetarian Preference</h2>
+        <label class="check"><input type="radio" formControlName="vegetarianPreference" value="veg" /> Veg Only</label>
+        <label class="check"><input type="radio" formControlName="vegetarianPreference" value="non-veg" /> Non-Veg Allowed</label>
+        <label class="check"><input type="radio" formControlName="vegetarianPreference" value="any" /> Any / No Preference</label>
+
+        <h2>Amenities included</h2>
+        <div class="amenity-grid" formGroupName="amenities">
+        @for (a of amenities; track a) {
+            <label class="check"><input type="checkbox" [formControlName]="a" /> {{ a }}</label>
+        }
+        </div>
+
+        <h2>Photos</h2>
+        <div formArrayName="photos">
+        @for (ctrl of photos.controls; track $index; let i = $index) {
+            <div class="photo-row">
+            <input type="url" [formControlName]="i" placeholder="https://example.com/photo.jpg" />
+            <button type="button" class="secondary" (click)="removePhoto(i)" [disabled]="photos.length === 1">
+                Remove
+            </button>
+            </div>
+            @if (ctrl.touched && ctrl.invalid) {
+            <small class="error">Enter a valid image URL starting with http:// or https://</small>
+            }
+        }
+        </div>
+        <button type="button" class="secondary" (click)="addPhoto()">+ Add another photo</button>
+
+        <h2>Contact</h2>
+        <label for="phone">Phone number</label>
+        <input id="phone" type="tel" formControlName="contactPhone" placeholder="10-digit number" />
+        @if (hasError('contactPhone', 'required')) {
+        <small class="error">Phone number is required</small>
+        }
+        @if (hasError('contactPhone', 'pattern')) {
+        <small class="error">Enter exactly 10 digits</small>
+        }
+
+        <button type="submit" class="submit">{{ isEditMode() ? 'Preview Changes' : 'Preview Listing' }}</button>
+    </form>
+    </div>
+}

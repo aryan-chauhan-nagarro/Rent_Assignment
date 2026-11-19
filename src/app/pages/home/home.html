@@ -1,0 +1,111 @@
+@if (currentSlide(); as slide) {
+  <section class="carousel">
+    <div class="slide-image">
+      <img [src]="slide.photos[0]" [alt]="slide.title" />
+      <button type="button" class="nav prev" (click)="prev()">‹</button>
+      <button type="button" class="nav next" (click)="next()">›</button>
+    </div>
+    <div class="slide-info">
+      <h2>Featured Listings</h2>
+      <h3>{{ slide.title }}</h3>
+      <p class="muted">{{ slide.address }}</p>
+      <p class="rent">{{ slide.rent | currency: 'INR'}} / month</p>
+      <div class="slide-actions">
+        <a class="btn" [routerLink]="['/listing', slide.id]">View Details</a>
+        <button
+          type="button"
+          class="fav"
+          [class.active]="isFavourite(slide.id)"
+          (click)="onToggle(slide.id)"
+        >
+          {{ isFavourite(slide.id) ? '♥ Favourited' : '♡ Mark as Favourite' }}
+        </button>
+      </div>
+    </div>
+  </section>
+}
+
+<section class="filters">
+  <div class="filter-row">
+    <div>
+      <label for="search">Search</label>
+      <input id="search" type="text" placeholder="Title or location"
+             [value]="search()" (input)="onSearch($event)" />
+    </div>
+    <div>
+      <label for="max">Max rent</label>
+      <input id="max" type="number" min="0" placeholder="e.g. 1000"
+             [value]="maxPrice() ?? ''" (input)="onMaxPrice($event)" />
+    </div>
+    <div>
+      <label for="veg">Food Preference</label>
+      <select id="veg" [value]="vegPreference()" (change)="onVegPreference($any($event.target).value)">
+        <option value="all">All / Any</option>
+        <option value="veg">Veg Only</option>
+        <option value="non-veg">Non-Veg Allowed</option>
+      </select>
+    </div>
+    <div>
+      <label for="sort">Sort by</label>
+      <select id="sort" [value]="sortBy()" (change)="onSort($event)">
+        <option value="newest">Newest first</option>
+        <option value="priceAsc">Price: low to high</option>
+        <option value="priceDesc">Price: high to low</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filter-row-secondary">
+    <label class="check">
+      <input type="checkbox" [checked]="furnishedOnly()" (change)="onFurnished($event)" />
+      Furnished only
+    </label>
+
+    @if (auth.isLoggedIn()) {
+      <label class="check">
+        <input type="checkbox" [checked]="onlyMine()" (change)="toggleOnlyMine()" />
+        ★ My Listings Only
+      </label>
+      <label class="check">
+        <input type="checkbox" [checked]="onlyFavourites()" (change)="toggleOnlyFavourites()" />
+        ♥ My Favourites Only
+      </label>
+    }
+  </div>
+
+  <div class="amenity-list">
+    @for (a of allAmenities; track a) {
+      <label class="check">
+        <input type="checkbox" [checked]="selectedAmenities().includes(a)" (change)="onAmenity(a)" />
+        {{ a }}
+      </label>
+    }
+  </div>
+
+  <button type="button" class="clear" (click)="clearFilters()">Clear filters</button>
+</section>
+
+<h1>All Listings</h1>
+<p class="muted">{{ sorted().length }} listings found</p>
+
+<div class="grid">
+  @for (item of paged(); track item.id) {
+    <app-listing-card
+      [listing]="item"
+      [isFavourite]="isFavourite(item.id)"
+      (favouriteToggled)="onToggle($event)"
+    />
+  } @empty {
+    <p>No listings match your filters.</p>
+  }
+</div>
+
+@if (totalPages() > 1) {
+  <div class="pagination">
+    <button type="button" (click)="goTo(page() - 1)" [disabled]="page() === 1">Prev</button>
+    @for (p of pages(); track p) {
+      <button type="button" [class.active]="p === page()" (click)="goTo(p)">{{ p }}</button>
+    }
+    <button type="button" (click)="goTo(page() + 1)" [disabled]="page() === totalPages()">Next</button>
+  </div>
+}

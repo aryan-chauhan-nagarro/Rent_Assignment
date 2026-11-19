@@ -1,0 +1,74 @@
+<div class="preview">
+  <h1>Preview and Submit</h1>
+  <p class="muted">Check everything below. Nothing is published until you confirm.</p>
+
+  <div class="boxes">
+    <div class="box">
+      <h3>Title</h3>
+      <p>{{ listing().title }}</p>
+    </div>
+    <div class="box">
+      <h3>Rent</h3>
+      <p>
+        {{ listing().rent | currency: 'INR'}} / month
+        @if (listing().negotiable) { (negotiable) }
+      </p>
+    </div>
+    <div class="box">
+      <h3>Address</h3>
+      <p>{{ listing().address }}</p>
+    </div>
+    <div class="box">
+      <h3>Area</h3>
+      <p>{{ listing().squareFeet }} sq ft</p>
+    </div>
+    <div class="box">
+      <h3>Lease type</h3>
+      <p>{{ listing().leaseType }}</p>
+    </div>
+    <div class="box">
+      <h3>Furnished / Shared</h3>
+      <p>Furnished: {{ listing().furnished ? 'Yes' : 'No' }} | Shared: {{ listing().shared ? 'Yes' : 'No' }}</p>
+    </div>
+    <div class="box">
+      <h3>Food Preference</h3>
+      <p>
+        @switch (listing().vegetarianPreference) {
+          @case ('veg') { Veg Only }
+          @case ('non-veg') { Non-Veg Allowed }
+          @default { Any / No Preference }
+        }
+      </p>
+    </div>
+    <div class="box wide">
+      <h3>Description</h3>
+      <p>{{ listing().description }}</p>
+    </div>
+    <div class="box wide">
+      <h3>Amenities</h3>
+      <div class="chips">
+        @for (a of listing().amenities; track a) {
+          <span class="chip">{{ a }}</span>
+        } @empty {
+          <span class="muted">None selected</span>
+        }
+      </div>
+    </div>
+    <div class="box wide">
+      <h3>Contact</h3>
+      <p>{{ listing().contactPhone }}</p>
+    </div>
+  </div>
+
+  <h3 class="photos-title">Photos</h3>
+  <div class="photos">
+    @for (p of listing().photos; track $index) {
+      <img [src]="p" [alt]="listing().title" />
+    }
+  </div>
+
+  <div class="buttons">
+    <button type="button" class="secondary" (click)="edit.emit()">← Back to edit</button>
+    <button type="button" (click)="confirmed.emit()">Confirm and Publish</button>
+  </div>
+</div>

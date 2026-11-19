@@ -1,0 +1,8 @@
+<div class="toasts">
+  @for (t of toasts(); track t.id) {
+    <div [class]="'toast ' + t.type">
+      <span>{{ t.message }}</span>
+      <button type="button" (click)="dismiss(t.id)">×</button>
+    </div>
+  }
+</div>

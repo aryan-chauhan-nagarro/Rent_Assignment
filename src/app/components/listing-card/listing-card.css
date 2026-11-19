@@ -1,0 +1,116 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.image-container {
+  position: relative;
+}
+
+.badge-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badge-tag.veg {
+  background: #166534;
+  color: #fff;
+}
+
+.badge-tag.non-veg {
+  background: #991b1b;
+  color: #fff;
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+}
+
+.card-body h3 {
+  margin-bottom: 0.25rem;
+}
+
+.address {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.rent {
+  margin: 0.5rem 0;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.desc {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.actions a {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+}
+
+.actions a:hover {
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+}
+
+.actions button {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.actions button:hover:not(:disabled) {
+  background: var(--danger);
+  color: #fff;
+}
+
+.actions button.active {
+  background: var(--danger);
+  color: #fff;
+}

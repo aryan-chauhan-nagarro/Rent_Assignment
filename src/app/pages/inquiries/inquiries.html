@@ -1,0 +1,110 @@
+<div class="inquiries-container">
+  <div class="header">
+    <h1>Inquiries Dashboard</h1>
+    <p class="muted">Manage and review direct messages between prospective renters and property owners.</p>
+  </div>
+
+  <div class="tabs">
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="activeTab() === 'received'"
+      (click)="setTab('received')"
+    >
+      📥 Received for My Properties ({{ receivedInquiries().length }})
+    </button>
+    <button
+      type="button"
+      class="tab-btn"
+      [class.active]="activeTab() === 'sent'"
+      (click)="setTab('sent')"
+    >
+      📤 Sent to Landlords ({{ sentInquiries().length }})
+    </button>
+  </div>
+
+  @if (activeTab() === 'received') {
+    <section class="inquiry-list">
+      @for (inq of receivedInquiries(); track inq.id) {
+        <article class="inquiry-card">
+          <div class="card-header">
+            <div>
+              <span class="badge property-badge">Property</span>
+              <a [routerLink]="['/listing', inq.listingId]" class="property-link">
+                <strong>{{ inq.listingTitle }}</strong>
+              </a>
+            </div>
+            <span class="timestamp">{{ inq.createdAt | date: 'medium' }}</span>
+          </div>
+
+          <div class="sender-info">
+            <strong>From:</strong> {{ inq.fromName }}
+            @if (inq.fromUserEmail) {
+              <span class="sender-email">(&lt;{{ inq.fromUserEmail }}&gt;)</span>
+            }
+          </div>
+
+          <p class="inquiry-message">{{ inq.message }}</p>
+
+          <div class="card-actions">
+            @if (inq.fromUserEmail) {
+              <a
+                class="btn-reply"
+                [href]="'mailto:' + inq.fromUserEmail + '?subject=Re: Inquiry about ' + inq.listingTitle"
+              >
+                ✉ Reply via Email
+              </a>
+            }
+            <button type="button" class="btn-delete" (click)="deleteInquiry(inq.id)">
+              🗑 Dismiss
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <p class="empty-icon">📭</p>
+          <h3>No inquiries received yet</h3>
+          <p class="muted">
+            When prospective renters send inquiries on your listings, they will appear here.
+          </p>
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="inquiry-list">
+      @for (inq of sentInquiries(); track inq.id) {
+        <article class="inquiry-card">
+          <div class="card-header">
+            <div>
+              <span class="badge sent-badge">Inquired About</span>
+              <a [routerLink]="['/listing', inq.listingId]" class="property-link">
+                <strong>{{ inq.listingTitle }}</strong>
+              </a>
+            </div>
+            <span class="timestamp">{{ inq.createdAt | date: 'medium' }}</span>
+          </div>
+
+          <p class="inquiry-message">{{ inq.message }}</p>
+
+          <div class="card-actions">
+            <a [routerLink]="['/listing', inq.listingId]" class="btn-view">
+              View Property
+            </a>
+            <button type="button" class="btn-delete" (click)="deleteInquiry(inq.id)">
+              Remove
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <p class="empty-icon">✉️</p>
+          <h3>No inquiries sent yet</h3>
+          <p class="muted">
+            You haven't sent any inquiries to landlords yet. Browse apartments and ask landlords any questions you have!
+          </p>
+          <a routerLink="/" class="btn-browse">Browse Apartments</a>
+        </div>
+      }
+    </section>
+  }
+</div>
