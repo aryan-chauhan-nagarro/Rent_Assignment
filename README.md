@@ -7,7 +7,7 @@ RentHub is a comprehensive, responsive web application built with Angular to sim
 ## Project Links
 
 - **GitHub Repository:** [https://github.com/aryan-chauhan-nagarro/Rent_Assignment](https://github.com/aryan-chauhan-nagarro/Rent_Assignment)
-- **Live Deployed Application:** [https://renthub-app-e1xw.onrender.com](https://renthub-app-e1xw.onrender.com)
+- **Live Deployed Application:** [https://rent-assignment.vercel.app/](https://rent-assignment.vercel.app/)
 
 ---
 
